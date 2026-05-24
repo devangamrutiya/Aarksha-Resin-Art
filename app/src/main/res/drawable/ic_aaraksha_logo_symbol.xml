@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Perfectly centered glassy resin rosette/flower with gold borders -->
+    <!-- Background Circle/Ring -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.8"
+        android:fillColor="#0E4C4C"
+        android:pathData="M54,16 A38,38 0 1,1 53.9,16 Z" />
+
+    <!-- inner white porcelain circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,21 A33,33 0 1,1 53.9,21 Z" />
+
+    <!-- Stylized Central Resin Lotus Petals -->
+    <!-- North Petal -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1"
+        android:fillColor="#0D5C5C"
+        android:pathData="M54,54 C54,42 46,30 54,30 C62,30 54,42 54,54 Z" />
+    <path
+        android:fillColor="#007A7A"
+        android:pathData="M54,52 C54,44 48,34 54,34 C60,34 54,44 54,52 Z" />
+
+    <!-- South Petal -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1"
+        android:fillColor="#0D5C5C"
+        android:pathData="M54,54 C54,66 46,78 54,78 C62,78 54,66 54,54 Z" />
+    <path
+        android:fillColor="#007A7A"
+        android:pathData="M54,56 C54,64 48,74 54,74 C60,74 54,64 54,56 Z" />
+
+    <!-- East Petal -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1"
+        android:fillColor="#0E4C4C"
+        android:pathData="M54,54 C66,54 78,46 78,54 C78,62 66,54 54,54 Z" />
+    <path
+        android:fillColor="#008B8B"
+        android:pathData="M56,54 C64,54 74,48 74,54 C74,60 64,54 56,54 Z" />
+
+    <!-- West Petal -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1"
+        android:fillColor="#0E4C4C"
+        android:pathData="M54,54 C42,54 30,46 30,54 C30,62 42,54 54,54 Z" />
+    <path
+        android:fillColor="#008B8B"
+        android:pathData="M52,54 C44,54 34,48 34,54 C34,60 44,54 52,54 Z" />
+
+    <!-- Interstitial gold accents -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.2"
+        android:pathData="M44,44 L64,64" />
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.2"
+        android:pathData="M64,44 L44,64" />
+
+    <!-- Center Pistil Ornament -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M54,49.5 A4.5,4.5 0 1,1 53.9,49.5 Z" />
+
+</vector>

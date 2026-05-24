@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="250dp"
+    android:height="250dp"
+    android:viewportWidth="250"
+    android:viewportHeight="250">
+
+    <!-- Definitions for linear gradients to give that liquid resin glassy teal look -->
+    <!-- Top-Right and Bottom-Left glassy teal resin florals -->
+    <path
+        android:fillColor="#E0F2F1"
+        android:pathData="M180,10 C190,5 210,10 215,25 C205,35 195,30 180,10 Z" />
+
+    <!-- Corner Resin Flower Petal 1 -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.2"
+        android:fillColor="#0D5C5C"
+        android:pathData="M230,20 C240,40 210,70 190,55 C190,35 210,10 230,20 Z" />
+    <path
+        android:fillColor="#008B8B"
+        android:pathData="M225,24 C232,38 212,58 198,48 C198,35 212,18 225,24 Z" />
+
+    <!-- Corner Resin Flower Petal 2 -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.2"
+        android:fillColor="#0E4C4C"
+        android:pathData="M190,55 C165,65 145,40 165,22 C185,15 200,35 190,55 Z" />
+    <path
+        android:fillColor="#007A7A"
+        android:pathData="M187,50 C169,57 155,39 169,27 C183,21 194,36 187,50 Z" />
+
+    <!-- Gold Accent Filaments on Corner Flowers -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="0.8"
+        android:pathData="M190,55 L210,35" />
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="0.8"
+        android:pathData="M190,55 L175,35" />
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M210,35 A1.5,1.5 0 1,1 209.9,35 Z" />
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M175,35 A1.5,1.5 0 1,1 174.9,35 Z" />
+
+    <!-- Bottom Left Resin Flower -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.2"
+        android:fillColor="#0D5C5C"
+        android:pathData="M20,230 C10,210 40,180 60,195 C60,215 40,240 20,230 Z" />
+    <path
+        android:fillColor="#008B8B"
+        android:pathData="M25,226 C18,212 38,192 52,202 C52,215 38,232 25,226 Z" />
+
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.2"
+        android:fillColor="#0E4C4C"
+        android:pathData="M60,195 C85,185 105,210 85,228 C65,235 50,215 60,195 Z" />
+    <path
+        android:fillColor="#007A7A"
+        android:pathData="M63,200 C78,193 91,211 78,223 C65,229 56,214 63,200 Z" />
+
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="0.8"
+        android:pathData="M60,195 L40,215" />
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="0.8"
+        android:pathData="M60,195 L75,215" />
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M40,215 A1.5,1.5 0 1,1 39.9,215 Z" />
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M75,215 A1.5,1.5 0 1,1 74.9,215 Z" />
+
+    <!-- CENTRAL LUXURY EMERALD/GOLD BRAND ORNAMENT -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.5"
+        android:fillColor="#0E4C4C"
+        android:pathData="M125,70 C130,55 140,55 125,40 C110,55 120,55 125,70 Z" />
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1"
+        android:fillColor="#008B8B"
+        android:pathData="M110,63 C98,58 98,48 115,50 C110,58 105,60 110,63 Z" />
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1"
+        android:fillColor="#008B8B"
+        android:pathData="M140,63 C152,58 152,48 135,50 C140,58 145,60 140,63 Z" />
+
+    <!-- Underline Ornament Swirl -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.5"
+        android:fillColor="#0E4C4C"
+        android:pathData="M125,175 C130,190 140,190 125,205 C110,190 120,190 125,175 Z" />
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1"
+        android:fillColor="#008B8B"
+        android:pathData="M110,182 C98,187 98,197 115,195 C110,187 105,185 110,182 Z" />
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1"
+        android:fillColor="#008B8B"
+        android:pathData="M140,182 C152,187 152,197 135,195 C140,187 145,185 140,182 Z" />
+
+    <!-- BEAUTIFUL BRAND TYPOGRAPHY GRAPHICS FOR "Aaraksha" -->
+    <!-- Stylized "A" Calligraphy path -->
+    <path
+        android:fillColor="#0E4C4C"
+        android:pathData="M45,125 C35,128 32,135 32,140 C32,143 35,145 38,145 C45,145 52,135 55,125 C62,105 70,88 88,88 C95,88 98,92 98,98 C98,110 85,130 75,145 C72,148 70,150 72,152 C75,152 82,145 88,135 C90,132 94,128 98,128 C102,128 102,132 98,136 C92,145 82,154 74,154 C66,154 64,148 68,140 C78,122 88,102 88,96 C88,93 85,91 82,91 C68,91 55,110 45,125 Z" />
+
+    <!-- "a" Calligraphy path -->
+    <path
+        android:fillColor="#0E4C4C"
+        android:pathData="M104,136 C100,140 96,146 96,150 C96,153 99,154 102,154 C108,154 114,146 117,138 L117,152 C117,154 119,155 121,155 C123,155 125,154 125,151 L125,132 C125,128 121,126 116,126 C108,126 100,132 100,138 C100,142 103,144 106,144 C112,144 116,138 121,132 L119,136 C115,142 110,146 104,136 Z" />
+
+    <!-- "r" Calligraphy path -->
+    <path
+        android:fillColor="#0E4C4C"
+        android:pathData="M130,134 L130,152 C130,154 132,155 134,155 C136,155 137,154 137,151 L137,136 C137,130 141,128 145,128 C147,128 149,129 151,130 C152,127 151,125 148,125 C142,125 136,130 133,136 L133,132 C133,129 131,128 128,128 C126,128 125,129 125,131 L125,134 Z" />
+
+    <!-- "a" Calligraphy path 2 -->
+    <path
+        android:fillColor="#0E4C4C"
+        android:pathData="M154,136 C150,140 146,146 146,150 C146,153 149,154 152,154 C158,154 164,146 167,138 L167,152 C167,154 169,155 171,155 C173,155 175,154 175,151 L175,132 C175,128 171,126 166,126 C158,126 150,132 150,138 C150,142 153,144 156,144 C162,144 166,138 171,132 L169,136 C165,142 160,146 154,136 Z" />
+
+    <!-- "k" Calligraphy path -->
+    <path
+        android:fillColor="#0E4C4C"
+        android:pathData="M180,115 L180,152 C180,154 182,155 184,155 C186,155 187,154 187,151 L187,136 C187,134 191,128 196,128 C201,128 203,132 201,137 C197,143 190,149 194,154 L196,154 C202,148 206,140 208,135 C209,132 208,130 205,130 C201,130 197,134 194,138 L194,115 C194,112 192,111 189,111 C186,111 184,112 184,115 Z" />
+
+    <!-- "s" Calligraphy path -->
+    <path
+        android:fillColor="#0E4C4C"
+        android:pathData="M211,142 C211,148 215,152 220,152 C225,152 228,148 228,143 C228,138 223,136 218,135 C214,134 213,132 213,130 C213,128 215,127 218,127 C222,127 225,129 224,132 C225,133 227,134 228,131 C227,128 223,125 218,125 C213,125 209,129 209,134 C209,139 213,141 218,142 C222,143 223,145 223,147 C223,149 220,150 217,150 C213,150 211,146 211,142 Z" />
+
+    <!-- "h" Calligraphy path -->
+    <path
+        android:fillColor="#0E4C4C"
+        android:pathData="M232,115 L232,152 C232,154 234,155 236,155 C238,155 239,154 239,151 L239,134 C239,129 243,126 247,126 C250,126 251,128 251,131 L251,152 C251,154 253,155 255,155 C257,155 258,154 258,151 L258,130 C258,124 254,122 248,122 C242,122 238,126 235,131 L235,115 C235,112 233,111 230,111 C227,111 232,115 232,115 Z" />
+
+    <!-- "a" Calligraphy path 3 with gold swoosh accent -->
+    <path
+        android:fillColor="#0E4C4C"
+        android:pathData="M261,136 C257,140 253,146 253,150 C253,153 256,154 259,154 C265,154 271,146 274,138 L274,152 C274,154 276,155 278,155 C280,155 282,154 282,151 L282,132 C282,128 278,126 273,126 C265,126 257,132 257,138 C257,142 260,144 263,144 C269,144 273,138 278,132 L276,136 C272,142 267,146 261,136 Z" />
+
+    <!-- Swoosh Underline for brand flow & flourish -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.5"
+        android:pathData="M48,151 Q140,165 240,153" />
+
+    <!-- BRAND LETTERING: RESIN ART -->
+    <!-- R -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M92,168 L92,176 C92,176.5 92.4,177 93,177 C93.6,177 94,176.5 94,176 L94,173 L96.5,173 C98,173 99,172 99,170.5 C99,169 98,168 96.5,168 L92,168 Z M94,171 L94,169.5 L96.2,169.5 C97,169.5 97.5,169.8 97.5,170.25 C97.5,170.7 97,171 96.2,171 L94,171 Z" />
+    <!-- E -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M103,168 L103,176 C103,176.5 103.4,177 104,177 L108,177 C108.5,177 109,176.5 109,176 C109,175.5 108.5,175 108,175 L105,175 L105,173 L107.5,173 C108,173 108.5,172.5 108.5,172 C108.5,171.5 108,171 L107.5,171 L105,171 L105,169.5 L108,169.5 C108.5,169.5 109,169 109,168.5 C109,168 108.5,167.5 108,167.5 L104,167.5 C103.4,167.5 103,168 103,168 Z" />
+    <!-- S -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M113.5,171 C113.5,169 116.5,169.5 116.5,168.5 C116.5,168 115.5,168 115,168 C114,168 113.5,168.5 113.5,169 C113.5,169.5 113,169.5 112.5,169 C112.5,168 113.5,167 115,167 C116.5,167 117.5,167.5 117.5,169 C117.5,171 114.5,170.5 114.5,171.5 C114.5,172 115.5,172 116,172 C117,172 117.5,171.5 117.5,171 C117.5,170.5 118,170.5 118.5,171 C118.5,172 117,173 116,173 C114.5,173 113.5,172.5 113.5,171 Z" />
+    <!-- I -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M123,168.5 L123,175.5 C123,176 123.4,176.5 124,176.5 C124.6,176.5 125,176 125,175.5 L125,168.5 C125,168 124.6,167.5 124,167.5 C123.4,167.5 123,168 123,168.5 Z" />
+    <!-- N -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M129,168 L129,176 M134,168 L134,176 M129,168 L134,176" />
+
+    <!-- A -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M142,168 L142,176 M147,168 L147,176 M142,172 L147,172" />
+    <!-- R -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M152,168 L152,176 C152,176.5 152.4,177 153,177 C153.6,177 154,176.5 154,176 L154,173 L156.5,173 C158,173 159,172 159,170.5 C159,169 158,168 156.5,168 L152,168 Z M154,171 L154,169.5 L156.2,169.5 C157,169.5 157.5,169.8 157.5,170.25 C157.5,170.7 157,171 157.2,171 Z" />
+    <!-- T -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M164,168 L164,176 M161,168 L167,168" />
+
+</vector>

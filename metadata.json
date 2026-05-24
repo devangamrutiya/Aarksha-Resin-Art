@@ -1,0 +1,6 @@
+{
+  "name": "Aaraksha Resin Art",
+  "description": "An elegant, premium, and offline-first CRM app for Aaraksha Resin Art studio to manage orders, clients, payments, and graphics analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
