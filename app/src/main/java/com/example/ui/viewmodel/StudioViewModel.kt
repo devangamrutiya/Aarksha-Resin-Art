@@ -5,8 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.data.database.AppDatabase
-import androidx.room.withTransaction
 import com.example.data.entity.CustomerEntity
 import com.example.data.entity.OrderEntity
 import com.example.data.entity.PaymentHistoryEntity
@@ -160,7 +158,11 @@ class StudioViewModel(
 
     fun saveOrder(order: OrderEntity) {
         viewModelScope.launch {
-            artRepository.saveOrder(order)
+            try {
+                artRepository.saveOrder(order)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -177,7 +179,11 @@ class StudioViewModel(
 
     fun deleteOrder(order: OrderEntity) {
         viewModelScope.launch {
-            artRepository.deleteOrder(order)
+            try {
+                artRepository.deleteOrder(order)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -198,7 +204,11 @@ class StudioViewModel(
 
     fun deleteCustomer(phoneNumber: String) {
         viewModelScope.launch {
-            artRepository.deleteCustomerAndAllOrders(phoneNumber)
+            try {
+                artRepository.deleteCustomerAndAllOrders(phoneNumber)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -241,13 +251,21 @@ class StudioViewModel(
 
     fun recordManualPayment(orderId: Int, amount: Double, method: String, notes: String) {
         viewModelScope.launch {
-            artRepository.recordManualPayment(orderId, amount, method, notes)
+            try {
+                artRepository.recordManualPayment(orderId, amount, method, notes)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
     fun markPaymentAsSettled(orderId: Int, method: String = "UPI") {
         viewModelScope.launch {
-            artRepository.markPaymentAsSettled(orderId, method)
+            try {
+                artRepository.markPaymentAsSettled(orderId, method)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -281,7 +299,7 @@ class StudioViewModel(
             // Get data synchronously from reactive flows
             val currentOrders = allOrders.value
             val currentPayments = paymentsHistory.value
-            val currentCustomers = AppDatabase.getDatabase(getApplication()).customerDao().getAllCustomers().firstOrNull() ?: emptyList()
+            val currentCustomers = artRepository.getAllCustomers()
             
             val jsonString = BackupUtility.exportDatabaseToJson(
                 orders = currentOrders,
@@ -311,33 +329,7 @@ class StudioViewModel(
             }
 
             try {
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                    val db = AppDatabase.getDatabase(getApplication())
-                    val orderDao = db.orderDao()
-                    val customerDao = db.customerDao()
-                    val paymentDao = db.paymentDao()
-
-                    // Execute restore transactionally to support rollback if insertion of any element fails
-                    db.withTransaction {
-                        paymentDao.deleteAllPayments()
-                        orderDao.deleteAllOrders()
-                        customerDao.deleteAllCustomers()
-
-                        // Insert Customers
-                        for (cust in parsed.customers) {
-                            customerDao.insertCustomer(cust)
-                        }
-                        // Insert Orders
-                        for (ord in parsed.orders) {
-                            orderDao.insertOrder(ord)
-                        }
-                        // Insert Payments
-                        for (pay in parsed.payments) {
-                            paymentDao.insertPayment(pay)
-                        }
-                    }
-                }
-
+                artRepository.restoreDatabase(parsed.customers, parsed.orders, parsed.payments)
                 onResult(true, "Database backup restored successfully! Loaded ${parsed.orders.size} orders and ${parsed.customers.size} customer profiles.")
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -360,8 +352,7 @@ data class KPIValues(
 class StudioViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StudioViewModel::class.java)) {
-            val database = AppDatabase.getDatabase(application)
-            val repository = ArtRepository(database.orderDao(), database.customerDao(), database.paymentDao())
+            val repository = ArtRepository()
             val preferences = PreferencesRepository(application)
             @Suppress("UNCHECKED_CAST")
             return StudioViewModel(application, repository, preferences) as T

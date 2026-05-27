@@ -1,117 +1,167 @@
 package com.example.data.repository
 
-import com.example.data.dao.CustomerDao
-import com.example.data.dao.OrderDao
-import com.example.data.dao.PaymentDao
 import com.example.data.entity.CustomerEntity
 import com.example.data.entity.OrderEntity
 import com.example.data.entity.PaymentHistoryEntity
 import com.example.data.model.CustomerWithStats
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.tasks.await
+import kotlin.random.Random
 
-class ArtRepository(
-    private val orderDao: OrderDao,
-    private val customerDao: CustomerDao,
-    private val paymentDao: PaymentDao
-) {
-    // Orders
-    val allOrders: Flow<List<OrderEntity>> = orderDao.getAllOrders()
-    
-    fun getOrderByIdFlow(id: Int): Flow<OrderEntity?> = orderDao.getOrderByIdFlow(id)
-    
-    suspend fun getOrderById(id: Int): OrderEntity? = orderDao.getOrderById(id)
+class ArtRepository {
+    private val db = FirebaseFirestore.getInstance()
+    private val ordersRef = db.collection("orders")
+    private val customersRef = db.collection("customers")
+    private val paymentsRef = db.collection("payments")
 
-    fun searchOrders(query: String): Flow<List<OrderEntity>> = orderDao.searchOrders(query)
+    val allOrders: Flow<List<OrderEntity>> = ordersRef
+        .orderBy("createdDate", Query.Direction.DESCENDING)
+        .snapshots()
+        .map { snapshot ->
+            snapshot.documents.mapNotNull { it.toObject(OrderEntity::class.java) }
+        }
+
+    fun getOrderByIdFlow(id: Int): Flow<OrderEntity?> = ordersRef.document(id.toString())
+        .snapshots()
+        .map { it.toObject(OrderEntity::class.java) }
+
+    suspend fun getOrderById(id: Int): OrderEntity? = ordersRef.document(id.toString())
+        .get().await().toObject(OrderEntity::class.java)
+
+    fun searchOrders(query: String): Flow<List<OrderEntity>> = allOrders.map { list ->
+        if (query.isBlank()) list else list.filter {
+            it.customerName.contains(query, ignoreCase = true) ||
+            it.phoneNumber.contains(query, ignoreCase = true)
+        }
+    }
 
     suspend fun saveOrder(order: OrderEntity): Long {
-        // Automatically check if customer profile exists, if not create it
         val normalizedPhone = order.phoneNumber.trim()
         if (normalizedPhone.isNotEmpty()) {
-            val existingCustomer = customerDao.getCustomerByPhone(normalizedPhone)
+            val existingCustomer = customersRef.document(normalizedPhone).get().await().toObject(CustomerEntity::class.java)
             if (existingCustomer == null) {
-                customerDao.insertCustomer(
-                    CustomerEntity(
-                        phoneNumber = normalizedPhone,
-                        name = order.customerName.trim()
-                    )
-                )
+                customersRef.document(normalizedPhone).set(
+                    CustomerEntity(phoneNumber = normalizedPhone, name = order.customerName.trim())
+                ).await()
             } else if (existingCustomer.name != order.customerName.trim()) {
-                // Keep name updated
-                customerDao.insertCustomer(
+                customersRef.document(normalizedPhone).set(
                     existingCustomer.copy(name = order.customerName.trim())
-                )
+                ).await()
             }
         }
         
-        val orderId = if (order.id == 0) {
-            val newId = orderDao.insertOrder(order)
-            // If advance is paid, log that payment in transaction log!
-            if (order.advancePaid > 0) {
-                paymentDao.insertPayment(
+        var orderToSave = order
+        val isNew = order.id == 0
+        if (isNew) {
+            val newId = kotlin.math.abs(Random.nextInt())
+            orderToSave = order.copy(id = newId)
+            ordersRef.document(newId.toString()).set(orderToSave).await()
+            
+            if (orderToSave.advancePaid > 0) {
+                val newPaymentId = kotlin.math.abs(Random.nextInt())
+                paymentsRef.document(newPaymentId.toString()).set(
                     PaymentHistoryEntity(
-                        orderId = newId.toInt(),
-                        customerName = order.customerName,
-                        amountPaid = order.advancePaid,
-                        paymentMethod = "UPI", // standard default
+                        id = newPaymentId,
+                        orderId = newId,
+                        customerName = orderToSave.customerName,
+                        amountPaid = orderToSave.advancePaid,
+                        paymentMethod = "UPI",
                         notes = "Initial advance paid on creation"
                     )
-                )
+                ).await()
             }
-            newId
         } else {
-            val oldOrder = orderDao.getOrderById(order.id)
+            val oldOrder = getOrderById(order.id)
             if (oldOrder != null && oldOrder.advancePaid != order.advancePaid) {
                 val diff = order.advancePaid - oldOrder.advancePaid
                 if (diff > 0) {
-                    paymentDao.insertPayment(
+                    val newPaymentId = kotlin.math.abs(Random.nextInt())
+                    paymentsRef.document(newPaymentId.toString()).set(
                         PaymentHistoryEntity(
+                            id = newPaymentId,
                             orderId = order.id,
                             customerName = order.customerName,
                             amountPaid = diff,
                             paymentMethod = "UPI",
                             notes = "Additional advance/partial payment registered"
                         )
-                    )
+                    ).await()
                 }
             }
-            orderDao.updateOrder(order)
-            order.id.toLong()
+            ordersRef.document(order.id.toString()).set(orderToSave).await()
         }
-        return orderId
+        return orderToSave.id.toLong()
     }
 
     suspend fun deleteOrder(order: OrderEntity) {
-        paymentDao.deletePaymentsForOrder(order.id)
-        orderDao.deleteOrder(order)
+        deleteOrderById(order.id)
     }
 
     suspend fun deleteOrderById(id: Int) {
-        paymentDao.deletePaymentsForOrder(id)
-        orderDao.deleteOrderById(id)
+        val payments = paymentsRef.whereEqualTo("orderId", id).get().await()
+        for (doc in payments.documents) {
+            doc.reference.delete().await()
+        }
+        ordersRef.document(id.toString()).delete().await()
     }
 
-    // Customers with aggregates
     fun getCustomersWithStats(query: String): Flow<List<CustomerWithStats>> {
-        return customerDao.getCustomersWithStats(query)
+        val customersFlow = customersRef.snapshots().map { snapshot -> 
+            snapshot.documents.mapNotNull { it.toObject(CustomerEntity::class.java) }
+        }
+        return combine(customersFlow, allOrders) { customers, orders ->
+            val result = customers.map { customer ->
+                val customerOrders = orders.filter { it.phoneNumber == customer.phoneNumber }
+                CustomerWithStats(
+                    phoneNumber = customer.phoneNumber,
+                    name = customer.name,
+                    totalOrdersCount = customerOrders.size,
+                    totalSpent = customerOrders.sumOf { it.totalAmount },
+                    lastOrderDate = customerOrders.maxOfOrNull { it.createdDate }
+                )
+            }
+            if (query.isBlank()) result else result.filter {
+                it.name.contains(query, ignoreCase = true) || it.phoneNumber.contains(query, ignoreCase = true)
+            }
+        }
     }
 
     suspend fun deleteCustomerAndAllOrders(phoneNumber: String) {
-        orderDao.deleteOrdersByPhoneNumber(phoneNumber)
-        customerDao.deleteCustomerByPhone(phoneNumber)
+        val orders = ordersRef.whereEqualTo("phoneNumber", phoneNumber).get().await()
+        for (doc in orders.documents) {
+            val orderId = doc.getLong("id")?.toInt()
+            if (orderId != null) deleteOrderById(orderId)
+        }
+        customersRef.document(phoneNumber).delete().await()
     }
 
-    // Payments Tracker and History
-    val allPayments: Flow<List<PaymentHistoryEntity>> = paymentDao.getAllPayments()
+    val allPayments: Flow<List<PaymentHistoryEntity>> = paymentsRef
+        .orderBy("paymentDate", Query.Direction.DESCENDING)
+        .snapshots()
+        .map { snapshot ->
+            snapshot.documents.mapNotNull { it.toObject(PaymentHistoryEntity::class.java) }
+        }
 
-    fun searchPayments(query: String): Flow<List<PaymentHistoryEntity>> = paymentDao.searchPayments(query)
+    fun searchPayments(query: String): Flow<List<PaymentHistoryEntity>> = allPayments.map { list ->
+        if (query.isBlank()) list else list.filter {
+            it.customerName.contains(query, ignoreCase = true) ||
+            it.notes.contains(query, ignoreCase = true)
+        }
+    }
 
     suspend fun addPaymentHistory(payment: PaymentHistoryEntity): Long {
-        return paymentDao.insertPayment(payment)
+        val paymentToSave = if (payment.id == 0) payment.copy(id = kotlin.math.abs(Random.nextInt())) else payment
+        paymentsRef.document(paymentToSave.id.toString()).set(paymentToSave).await()
+        return paymentToSave.id.toLong()
     }
 
     suspend fun recordManualPayment(orderId: Int, amount: Double, method: String, notes: String) {
-        val order = orderDao.getOrderById(orderId)
+        val order = getOrderById(orderId)
         if (order != null) {
             val newAdvance = order.advancePaid + amount
             val newPaymentStatus = when {
@@ -124,9 +174,9 @@ class ArtRepository(
                 advancePaid = newAdvance.coerceAtMost(order.totalAmount),
                 paymentStatus = newPaymentStatus
             )
-            orderDao.updateOrder(updatedOrder)
+            ordersRef.document(orderId.toString()).set(updatedOrder).await()
             
-            paymentDao.insertPayment(
+            addPaymentHistory(
                 PaymentHistoryEntity(
                     orderId = orderId,
                     customerName = order.customerName,
@@ -139,11 +189,11 @@ class ArtRepository(
     }
 
     suspend fun markPaymentAsSettled(orderId: Int, paymentMethod: String = "UPI") {
-        val order = orderDao.getOrderById(orderId)
+        val order = getOrderById(orderId)
         if (order != null && order.paymentStatus != "Settled") {
             val outstanding = order.totalAmount - order.advancePaid
             if (outstanding > 0) {
-                paymentDao.insertPayment(
+                addPaymentHistory(
                     PaymentHistoryEntity(
                         orderId = order.id,
                         customerName = order.customerName,
@@ -157,7 +207,26 @@ class ArtRepository(
                 paymentStatus = "Settled",
                 advancePaid = order.totalAmount
             )
-            orderDao.updateOrder(updatedOrder)
+            ordersRef.document(orderId.toString()).set(updatedOrder).await()
+        }
+    }
+
+    suspend fun getAllCustomers(): List<CustomerEntity> {
+        return customersRef.get().await().toObjects(CustomerEntity::class.java)
+    }
+
+    suspend fun restoreDatabase(customers: List<CustomerEntity>, orders: List<OrderEntity>, payments: List<PaymentHistoryEntity>) {
+        // Warning: This does not delete existing data on Firebase.
+        // Doing a full delete could be dangerous, so we'll just upsert.
+        for (c in customers) {
+            customersRef.document(c.phoneNumber).set(c).await()
+        }
+        for (o in orders) {
+            ordersRef.document(o.id.toString()).set(o).await()
+        }
+        for (p in payments) {
+            paymentsRef.document(p.id.toString()).set(p).await()
         }
     }
 }
+

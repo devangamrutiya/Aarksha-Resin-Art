@@ -1,15 +1,11 @@
 package com.example.data.entity
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "payment_history")
 data class PaymentHistoryEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val orderId: Int,
-    val customerName: String,
-    val amountPaid: Double,
+    val id: Int = 0,
+    val orderId: Int = 0,
+    val customerName: String = "",
+    val amountPaid: Double = 0.0,
     val paymentDate: Long = System.currentTimeMillis(),
-    val paymentMethod: String, // "Cash", "UPI", "Card", "Bank Transfer"
+    val paymentMethod: String = "",
     val notes: String = ""
 )

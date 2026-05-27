@@ -1,21 +1,17 @@
 package com.example.data.entity
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "orders")
 data class OrderEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val customerName: String,
-    val phoneNumber: String,
-    val productCategory: String, // e.g., "Wall Clock", "Coasters", "Geode Art", "Resin Table"
-    val size: String,            // e.g., "12 inch", "18 inch", "Custom"
-    val description: String,
-    val totalAmount: Double,
-    val advancePaid: Double,
-    val paymentStatus: String,   // "Pending", "Partial", "Settled"
-    val orderStatus: String,     // "Not Started", "In Progress", "Completed", "Cancelled"
-    val deliveryDate: Long,      // timestamp in ms
+    val id: Int = 0,
+    val customerName: String = "",
+    val phoneNumber: String = "",
+    val productCategory: String = "", 
+    val size: String = "",            
+    val description: String = "",
+    val totalAmount: Double = 0.0,
+    val advancePaid: Double = 0.0,
+    val paymentStatus: String = "",   
+    val orderStatus: String = "",     
+    val deliveryDate: Long = 0L,      
     val notes: String = "",
     val createdDate: Long = System.currentTimeMillis()
 )

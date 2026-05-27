@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "978593576781",
+    "project_id": "aarkhsharesin",
+    "storage_bucket": "aarkhsharesin.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978593576781:android:df1f97407d460c79a4a904",
+        "android_client_info": {
+          "package_name": "com.aarkhsa.resin.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz-uK-n1thrAizlJNl5ntJyInj9K9X4A4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
